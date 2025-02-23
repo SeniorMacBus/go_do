@@ -3,6 +3,7 @@ package terminal
 import (
 	"bufio"
 	"fmt"
+	"go_do/parser"
 	"os"
 )
 
@@ -27,6 +28,8 @@ func Session() {
 			fmt.Println(err)
 			active = false
 		}
+		command, text := parser.ParseInput(line)
+		fmt.Println(command, text)
 		PrintToTerminal(line)
 		if !active {
 			break
