@@ -1,10 +1,18 @@
 package rope
 
+import "fmt"
+
 type Rope struct {
 	Data   string
 	Weight uint
 	Left   *Rope
 	Right  *Rope
+}
+
+type spliterror struct{}
+
+func (e *spliterror) Error() string {
+	return "There was an error during the split operation!"
 }
 
 func (r *Rope) calc_weight() {
@@ -16,6 +24,18 @@ func (r *Rope) calc_weight() {
 			r.Weight += r.Right.Weight
 		}
 	}
+}
+
+func Print(r *Rope) {
+	if r == nil {
+		return
+	}
+
+	Print(r.Left)
+	if r.Data != "" {
+		fmt.Print(r.Data)
+	}
+	Print(r.Right)
 }
 
 func ParseRope(r Rope, idx uint) {
@@ -47,20 +67,26 @@ func CharAt(r Rope, idx uint) byte {
 	}
 }
 
-// TODO: finish this function
-func Split(r Rope, idx uint) (Rope, Rope) {
-	if r.Data != "" {
+func Substring(r Rope) {
 
-	}
-
-	return left, right
 }
 
-func Insert(r Rope, idx uint, s string) Rope {
-	left, right := Split(r, idx)
-	insert_rope := CreateNewRope(s, nil, nil)
-	left_attached := Concatenate(&left, &insert_rope)
-	new_rope := Concatenate(&left_attached, right)
+func (r *Rope) Insert(to_insert Rope, idx uint) {
+}
 
-	return new_rope
+// TODO: finish this function
+func Split(r *Rope, idx uint) (Rope, Rope, error) {
+	if r == nil {
+		left := CreateNewRope("", nil, nil)
+		right := CreateNewRope("", nil, nil)
+		err := &spliterror{}
+		return left, right, err
+	}
+	if r.Data != "" {
+		left := CreateNewRope(r.Data[:idx], nil, nil)
+		right := CreateNewRope(r.Data[idx:], nil, nil)
+		return left, right, nil
+	}
+
+	return CreateNewRope("", nil, nil), CreateNewRope("", nil, nil), nil
 }
